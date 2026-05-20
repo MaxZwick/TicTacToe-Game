@@ -56,4 +56,9 @@ public class Board {
         }
         System.out.println("-------"); // Untere Begrenzung
     }
+
+    // Gibt das Zeichen an einer bestimmten Position zurück (Hilfsmethode für die Gewinnprüfung)
+    public char getCell(int x, int y) {
+        return cells[x][y];
+    }
 }

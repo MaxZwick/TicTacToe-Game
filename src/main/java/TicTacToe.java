@@ -30,17 +30,26 @@ public class TicTacToe {
             System.out.print("column (0-2): ");
             int col = scanner.nextInt();
 
-            // Prüfen, ob das Feld frei und gültig ist (US-1)
+            // Prüfen, ob das Feld frei und gültig ist
             if (board.isCellEmpty(row, col)) {
                 board.place(row, col, currentPlayer.getMarker());
 
-                // Für US-1 prüfen wir vorerst nur, ob das Brett voll ist (Unentschieden)
-                if (board.isFull()) {
-                    System.out.println("Das Spielfeld ist voll! Unentschieden.");
+                // ZUERST prüfen, ob dieser Zug zum Sieg geführt hat
+                if (hasWinner()) {
+                    System.out.println("\nHERZLICHEN GLÜCKWUNSCH!");
+                    System.out.println("Spieler " + currentPlayer.getMarker() + " hat das Spiel gewonnen!");
                     board.print();
                     gameEnded = true;
-                } else {
-                    switchCurrentPlayer(); // Nächster Spieler ist dran
+                }
+                // DANN prüfen, ob das Feld voll ist (Unentschieden)
+                else if (board.isFull()) {
+                    System.out.println("\nDas Spielfeld ist voll! Es ist ein Unentschieden.");
+                    board.print();
+                    gameEnded = true;
+                }
+                // Wenn beides nicht zutrifft, geht das Spiel normal weiter
+                else {
+                    switchCurrentPlayer();
                 }
             } else {
                 System.out.println("Dieses Feld ist bereits belegt oder ungültig. Versuch es noch einmal!");
@@ -58,9 +67,31 @@ public class TicTacToe {
         }
     }
 
-    // Wird später in US-3 richtig programmiert!
+    // Prüft, ob der aktuelle Spieler gewonnen hat
     private boolean hasWinner() {
-        return false;
+        char m = currentPlayer.getMarker(); // Das Zeichen des aktuellen Spielers (X oder O)
+
+        // 1. Zeilen prüfen
+        for (int i = 0; i < 3; i++) {
+            if (board.getCell(i, 0) == m && board.getCell(i, 1) == m && board.getCell(i, 2) == m) {
+                return true;
+            }
+        }
+        // 2. Spalten prüfen
+        for (int j = 0; j < 3; j++) {
+            if (board.getCell(0, j) == m && board.getCell(1, j) == m && board.getCell(2, j) == m) {
+                return true;
+            }
+        }
+        // 3. Diagonalen prüfen
+        if (board.getCell(0, 0) == m && board.getCell(1, 1) == m && board.getCell(2, 2) == m) {
+            return true;
+        }
+        if (board.getCell(0, 2) == m && board.getCell(1, 1) == m && board.getCell(2, 0) == m) {
+            return true;
+        }
+
+        return false; // Wenn nichts zutrifft, hat noch niemand gewonnen
     }
 
     // --- MAIN METHODE ZUM STARTEN DES SPIELS ---
