@@ -17,43 +17,54 @@ public class TicTacToe {
     // Die Hauptschleife des Spiels
     public void start() {
         Scanner scanner = new Scanner(System.in);
-        boolean gameEnded = false;
+        boolean playAgain = true;
 
         System.out.println("Willkommen bei Tic-Tac-Toe!");
 
-        while (!gameEnded) {
-            System.out.println("\n--- Neuer Zug ---");
-            System.out.println("Current Player: " + currentPlayer.getMarker());
-            board.print();
+        // Äußere Schleife für mehrere aufeinanderfolgende Spiele (US-4)
+        while (playAgain) {
+            boolean gameEnded = false;
+            board.clear(); // Spielfeld für das neue Spiel leeren
+            currentPlayer = player1; // Spieler 1 (X) fängt wieder an
 
-            System.out.print("row (0-2): ");
-            int row = scanner.nextInt();
-            System.out.print("column (0-2): ");
-            int col = scanner.nextInt();
+            // Innere Schleife für ein einzelnes Spiel (US-1 bis US-3)
+            while (!gameEnded) {
+                System.out.println("\n--- Neuer Zug ---");
+                System.out.println("Current Player: " + currentPlayer.getMarker());
+                board.print();
 
-            // Prüfen, ob das Feld frei und gültig ist
-            if (board.isCellEmpty(row, col)) {
-                board.place(row, col, currentPlayer.getMarker());
+                System.out.print("row (0-2): ");
+                int row = scanner.nextInt();
+                System.out.print("column (0-2): ");
+                int col = scanner.nextInt();
 
-                // ZUERST prüfen, ob dieser Zug zum Sieg geführt hat
-                if (hasWinner()) {
-                    System.out.println("\nHERZLICHEN GLÜCKWUNSCH!");
-                    System.out.println("Spieler " + currentPlayer.getMarker() + " hat das Spiel gewonnen!");
-                    board.print();
-                    gameEnded = true;
+                // Prüfen, ob das Feld frei und gültig ist
+                if (board.isCellEmpty(row, col)) {
+                    board.place(row, col, currentPlayer.getMarker());
+
+                    if (hasWinner()) {
+                        System.out.println("\nHERZLICHEN GLÜCKWUNSCH!");
+                        System.out.println("Spieler " + currentPlayer.getMarker() + " hat das Spiel gewonnen!");
+                        board.print();
+                        gameEnded = true;
+                    } else if (board.isFull()) {
+                        System.out.println("\nDas Spielfeld ist voll! Es ist ein Unentschieden.");
+                        board.print();
+                        gameEnded = true;
+                    } else {
+                        switchCurrentPlayer();
+                    }
+                } else {
+                    System.out.println("Dieses Feld ist bereits belegt oder ungültig. Versuch es noch einmal!");
                 }
-                // DANN prüfen, ob das Feld voll ist (Unentschieden)
-                else if (board.isFull()) {
-                    System.out.println("\nDas Spielfeld ist voll! Es ist ein Unentschieden.");
-                    board.print();
-                    gameEnded = true;
-                }
-                // Wenn beides nicht zutrifft, geht das Spiel normal weiter
-                else {
-                    switchCurrentPlayer();
-                }
-            } else {
-                System.out.println("Dieses Feld ist bereits belegt oder ungültig. Versuch es noch einmal!");
+            }
+
+            // US-4: Nach dem Spiel fragen, ob man noch mal spielen will
+            System.out.print("\nMöchtest du noch eine Runde spielen? (j/n): ");
+            String answer = scanner.next();
+            if (!answer.equalsIgnoreCase("j")) {
+                playAgain = false; // Bricht die äußere Schleife ab
+                System.out.println("Danke fürs Spielen! Bis zum nächsten Mal.");
             }
         }
         scanner.close();
@@ -101,4 +112,3 @@ public class TicTacToe {
         game.start();
     }
 }
-
