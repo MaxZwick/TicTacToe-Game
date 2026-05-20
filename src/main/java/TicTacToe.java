@@ -22,6 +22,7 @@ public class TicTacToe {
         System.out.println("Willkommen bei Tic-Tac-Toe!");
 
         while (!gameEnded) {
+            System.out.println("\n--- Neuer Zug ---");
             System.out.println("Current Player: " + currentPlayer.getMarker());
             board.print();
 
